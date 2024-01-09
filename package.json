@@ -1,8 +1,8 @@
 {
-  "name": "next-firebase-starter",
+  "name": "hip-hop-pizza-n-wings",
   "private": true,
   "version": "1.0.0",
-  "author": "Trinity Christiana",
+  "author": "Thomas Rice",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
