@@ -1,55 +1,52 @@
-import { clientCredentials } from '../../utils/client';
+import { useEffect, useState } from 'react';
+import { getOrders } from '../../api/orderData';
+import OrderCard from '../../components/orders/OrderCard';
 
-const getOrders = () => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/orders`, {
-    method: 'GET',
-  })
-    .then((response) => response.json())
-    .then(resolve)
-    .catch(reject);
-});
+const OrdersPage = () => {
+  const [openOrders, setOpenOrders] = useState([]);
+  const [closedOrders, setClosedOrders] = useState([]);
 
-const getSingleOrder = (id) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/orders/${id}`, {
-    method: 'GET',
-  })
-    .then((response) => response.json())
-    .then(resolve)
-    .catch(reject);
-});
+  const retrieveOrders = () => {
+    getOrders().then((data) => {
+      const closed = data.filter((order) => !order.is_open);
+      const open = data.filter((order) => order.is_open);
+      setClosedOrders(closed);
+      setOpenOrders(open);
+      console.warn(data);
+    });
+  };
 
-const createOrder = (order) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/orders`, {
-    method: 'POST',
-    body: JSON.stringify(order),
-  })
-    .then((response) => response.json())
-    .then(resolve)
-    .catch(reject);
-});
+  useEffect(() => {
+    retrieveOrders();
+  }, []);
 
-const updateOrder = (order) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/orders/${order.id}`, {
-    method: 'GET',
-    body: JSON.stringify(order),
-  })
-    .then((response) => response.json())
-    .then(resolve)
-    .catch(reject);
-});
+  return (
+    <article>
+      <h2>Pending Orders</h2>
+      <div className="order-cards">
+        {openOrders.map((order) => (
+          <section key={order.id}>
+            <OrderCard orderObj={order} />
+          </section>
+        ))}
+      </div>
 
-const deleteOrder = (id) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/orders/${id}`, {
-    method: 'DELETE',
-  })
-    .then(resolve)
-    .catch(reject);
-});
-
-export {
-  getOrders,
-  getSingleOrder,
-  createOrder,
-  updateOrder,
-  deleteOrder,
+      <h2>Closed Orders</h2>
+      <div className="order-cards">
+        {closedOrders.map((order) => (
+          <section key={order.id}>
+            <OrderCard orderObj={order} />
+          </section>
+        ))}
+      </div>
+    </article>
+  );
 };
+
+export default OrdersPage;
+
+// {/* <Card style={{ width: '18rem' }}>
+//       <Card.Body>
+//         <Card.Title></Card.Title>
+//       </Card.Body>
+//     </Card> */}
