@@ -9,6 +9,24 @@ const getOrders = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getPaymentTypes = () => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/paymenttypes`, {
+    method: 'GET',
+  })
+    .then((response) => response.json())
+    .then(resolve)
+    .catch(reject);
+});
+
+const getOrderTypes = () => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/ordertypes`, {
+    method: 'GET',
+  })
+    .then((response) => response.json())
+    .then(resolve)
+    .catch(reject);
+});
+
 const getSingleOrder = (id) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/orders/${id}`, {
     method: 'GET',
@@ -30,7 +48,7 @@ const createOrder = (order) => new Promise((resolve, reject) => {
 
 const updateOrder = (order) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/orders/${order.id}`, {
-    method: 'GET',
+    method: 'PUT',
     body: JSON.stringify(order),
   })
     .then((response) => response.json())
@@ -52,4 +70,6 @@ export {
   createOrder,
   updateOrder,
   deleteOrder,
+  getOrderTypes,
+  getPaymentTypes,
 };
