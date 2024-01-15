@@ -1,8 +1,8 @@
-import OpenOrder from '../../components/orders/OpenOrder';
+import OrderForm from '../../components/orders/OrderForm';
 
 const NewOrder = () => (
   <div>
-    <OpenOrder newOrder={1} />
+    <OrderForm />
   </div>
 );
 
