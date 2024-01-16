@@ -4,8 +4,9 @@ import {
   Form,
   Row,
 } from 'react-bootstrap';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { createOrderItem } from '../../api/orderItemsData';
 
 const initialState = {
   order: '',
@@ -13,15 +14,21 @@ const initialState = {
   quantity: 1,
 };
 
-const MenuListItem = ({ item, setOrderItems, handleClose }) => {
+const MenuListItem = ({
+  item,
+  handleClose,
+  orderId,
+  setChange,
+}) => {
   const [lineItem, setLineItem] = useState(initialState);
 
   useEffect(() => {
     setLineItem((prevState) => ({
       ...prevState,
       item: item.id,
+      order: orderId,
     }));
-  }, [item.id]);
+  }, [item.id, orderId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,11 +39,14 @@ const MenuListItem = ({ item, setOrderItems, handleClose }) => {
   };
 
   const handleAdd = () => {
-    setOrderItems((prevState) => ([
-      ...prevState,
-      lineItem,
-    ]));
-    handleClose();
+    createOrderItem(lineItem).then(() => {
+      // setChange is a useState that is initialized on orders/[id]. It's value is a boolean.
+      // It's purpose is to detect a data change and refresh the DOM with the updated information.
+      // This refreshes the cart on OpenOrder.js when an item is added.
+
+      setChange((prevState) => !prevState);
+      handleClose();
+    });
   };
 
   return (
@@ -69,14 +79,15 @@ const MenuListItem = ({ item, setOrderItems, handleClose }) => {
 };
 
 MenuListItem.propTypes = {
-  item: propTypes.shape({
-    name: propTypes.string,
-    cost: propTypes.number,
-    quantity: propTypes.number,
-    id: propTypes.number,
+  item: PropTypes.shape({
+    name: PropTypes.string,
+    cost: PropTypes.number,
+    quantity: PropTypes.number,
+    id: PropTypes.number,
   }).isRequired,
-  setOrderItems: propTypes.func.isRequired,
-  handleClose: propTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  orderId: PropTypes.number.isRequired,
+  setChange: PropTypes.func.isRequired,
 };
 
 export default MenuListItem;
