@@ -6,7 +6,12 @@ import {
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../utils/context/authContext';
-import { createOrder, getOrderTypes, getPaymentTypes } from '../../api/orderData';
+import {
+  createOrder,
+  getOrderTypes,
+  getPaymentTypes,
+  updateOrder,
+} from '../../api/orderData';
 
 const initialState = {
   isOpen: true,
@@ -30,8 +35,6 @@ const OrderForm = ({ orderObj }) => {
   const router = useRouter();
   const { user } = useAuth();
 
-  console.warn(`${orderTypes}, ${paymentTypes}`);
-
   useEffect(() => {
     if (orderObj) {
       setDetails(orderObj);
@@ -54,7 +57,6 @@ const OrderForm = ({ orderObj }) => {
       ...prevState,
       [name]: value,
     }));
-    console.warn(e.target.value);
   };
 
   const handleNumberChange = (e) => {
@@ -67,9 +69,18 @@ const OrderForm = ({ orderObj }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createOrder(details).then((order) => {
-      router.push(`/orders/${order.id}`);
-    });
+    if (orderObj) {
+      details.isOpen = true;
+      const updatedServer = details.server.id;
+      details.server = updatedServer;
+      updateOrder(details).then((order) => {
+        router.push(`/orders/${order.id}`);
+      });
+    } else {
+      createOrder(details).then((order) => {
+        router.push(`/orders/${order.id}`);
+      });
+    }
   };
 
   return (
@@ -80,7 +91,7 @@ const OrderForm = ({ orderObj }) => {
 
           <Form.Group className="mb-3" controlId="dateControl">
             <Form.Label sm="2">Date:</Form.Label>
-            <Form.Control sm="2" plaintext readOnly type="email" value={date} required />
+            <Form.Control sm="2" plaintext readOnly type="string" value={date} required />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="customerControl">
@@ -111,7 +122,7 @@ const OrderForm = ({ orderObj }) => {
           <Form.Group className="mb-3" controlId="paymentTypeControl">
             <Form.Label sm="2">Payment</Form.Label>
             <Form.Select name="payment" value={details.payment} onChange={handleNumberChange} required>
-              <option value="">Choose a Payment method.</option>
+              <option value="">Choose Payment Method</option>
               {paymentTypes?.map((payment) => (
                 <option key={payment.id} value={payment.id}>{payment.label}</option>
               ))}

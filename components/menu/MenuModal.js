@@ -10,10 +10,6 @@ const MenuModal = ({ menu, orderId, setChange }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const testItem = () => {
-    console.warn(orderId);
-  };
-
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
@@ -35,9 +31,6 @@ const MenuModal = ({ menu, orderId, setChange }) => {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={testItem}>
-            Test button
           </Button>
         </Modal.Footer>
       </Modal>

@@ -12,7 +12,6 @@ const OrdersPage = () => {
       const open = data.filter((order) => order.is_open);
       setClosedOrders(closed);
       setOpenOrders(open);
-      console.warn(data);
     });
   };
 
@@ -26,7 +25,7 @@ const OrdersPage = () => {
       <div className="order-cards">
         {openOrders.map((order) => (
           <section key={order.id}>
-            <OrderCard orderObj={order} />
+            <OrderCard orderObj={order} onUpdate={retrieveOrders} />
           </section>
         ))}
       </div>
@@ -44,9 +43,3 @@ const OrdersPage = () => {
 };
 
 export default OrdersPage;
-
-// {/* <Card style={{ width: '18rem' }}>
-//       <Card.Body>
-//         <Card.Title></Card.Title>
-//       </Card.Body>
-//     </Card> */}

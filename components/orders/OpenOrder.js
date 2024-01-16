@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import MenuModal from '../menu/MenuModal';
 import { getMenu } from '../../api/menuData';
 import OrderListItem from '../menu/OrderListItem';
@@ -19,27 +20,12 @@ const initialState = {
   payment: '',
 };
 
-// const testInitialState = {
-//   is_open: true,
-//   subtotal: 23.03,
-//   tip: 5.23,
-//   tax: 4.37,
-//   total: 44.56,
-//   customer: 'John Smith',
-//   email: 'jsmith@notreal.com',
-//   phone: '8165556665',
-//   date: new Date().toDateString(),
-//   type: '',
-//   payment: '',
-// };
-
 const OpenOrder = ({ orderObj, setChange }) => {
   // Logic that will determine whether certains fields can be edited or not
   // const [active, setActive] = useState(true);
   const [order, setOrder] = useState(initialState);
   const [menu, setMenu] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
-  // console.warn(`Active: ${active}, newOrder: ${newOrder}, ${orderObj}`);
   console.warn(orderItems);
 
   useEffect(() => {
@@ -108,6 +94,9 @@ const OpenOrder = ({ orderObj, setChange }) => {
           <section>
             <p>Payment: {order.payment.label}</p>
           </section>
+          <Link passHref href={`/orders/edit/${order.id}`}>
+            <Button variant="success">Edit Order Details</Button>
+          </Link>
         </div>
       </div>
 
