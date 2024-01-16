@@ -39,6 +39,9 @@ const getSingleOrder = (id) => new Promise((resolve, reject) => {
 const createOrder = (order) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/orders`, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(order),
   })
     .then((response) => response.json())
@@ -49,6 +52,9 @@ const createOrder = (order) => new Promise((resolve, reject) => {
 const updateOrder = (order) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/orders/${order.id}`, {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(order),
   })
     .then((response) => response.json())

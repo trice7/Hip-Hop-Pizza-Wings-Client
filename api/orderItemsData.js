@@ -12,7 +12,10 @@ const getSingleOrderItem = (id) => new Promise((resolve, reject) => {
 const createOrderItem = (orderItem) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/orderitems`, {
     method: 'POST',
-    boy: JSON.stringify(orderItem),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(orderItem),
   })
     .then((response) => response.json())
     .then(resolve)
@@ -22,6 +25,9 @@ const createOrderItem = (orderItem) => new Promise((resolve, reject) => {
 const updateOrderItem = (orderItem) => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/orderitems/${orderItem.id}`, {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(orderItem),
   })
     .then((response) => response.json())

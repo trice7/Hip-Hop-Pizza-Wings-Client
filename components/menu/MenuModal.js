@@ -1,17 +1,17 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import MenuListItem from './MenuListItem';
 
-const MenuModal = ({ menu, setOrderItems }) => {
+const MenuModal = ({ menu, orderId, setChange }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const testItem = () => {
-    console.warn('orderItem');
+    console.warn(orderId);
   };
 
   return (
@@ -28,7 +28,7 @@ const MenuModal = ({ menu, setOrderItems }) => {
 
           {menu.map((item) => (
             <section key={item.id}>
-              <MenuListItem item={item} setOrderItems={setOrderItems} handleClose={handleClose} />
+              <MenuListItem item={item} handleClose={handleClose} orderId={orderId} setChange={setChange} />
             </section>
           ))}
         </Modal.Body>
@@ -43,6 +43,14 @@ const MenuModal = ({ menu, setOrderItems }) => {
       </Modal>
     </>
   );
+};
+
+MenuModal.propTypes = {
+  menu: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
+  orderId: PropTypes.number.isRequired,
+  setChange: PropTypes.func.isRequired,
 };
 
 export default MenuModal;

@@ -1,5 +1,6 @@
-import { Card } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 
 const OrderCard = ({ orderObj }) => (
   <Card style={{ width: '18rem' }}>
@@ -8,6 +9,9 @@ const OrderCard = ({ orderObj }) => (
       <Card.Text>Date: {orderObj.date}</Card.Text>
       <Card.Text>Customer: {orderObj.customer}</Card.Text>
       <Card.Text>Total: {orderObj.total}</Card.Text>
+      <Link passHref href={`/orders/${orderObj.id}`}>
+        <Button>View Order</Button>
+      </Link>
     </Card.Body>
   </Card>
 );

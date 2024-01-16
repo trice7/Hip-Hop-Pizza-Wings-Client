@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import {
   Button,
-  Col,
   Form,
-  Row,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { getOrderTypes, getPaymentTypes } from '../../api/orderData';
+import { useAuth } from '../../utils/context/authContext';
+import { createOrder, getOrderTypes, getPaymentTypes } from '../../api/orderData';
 
 const initialState = {
-  is_open: true,
+  isOpen: true,
   subtotal: 0,
   tip: 0,
   tax: 0,
@@ -17,7 +17,6 @@ const initialState = {
   customer: '',
   email: '',
   phone: '',
-  date: new Date().toDateString(),
   type: '',
   payment: '',
 };
@@ -27,13 +26,22 @@ const OrderForm = ({ orderObj }) => {
   const [orderTypes, setOrderTypes] = useState([]);
   const [paymentTypes, setPaymentTypes] = useState([]);
 
+  const date = new Date().toDateString();
+  const router = useRouter();
+  const { user } = useAuth();
+
   console.warn(`${orderTypes}, ${paymentTypes}`);
 
   useEffect(() => {
     if (orderObj) {
       setDetails(orderObj);
+    } else {
+      setDetails((prevState) => ({
+        ...prevState,
+        server: user.id,
+      }));
     }
-  }, [orderObj]);
+  }, [orderObj, user.id]);
 
   useEffect(() => {
     getOrderTypes().then(setOrderTypes);
@@ -49,56 +57,65 @@ const OrderForm = ({ orderObj }) => {
     console.warn(e.target.value);
   };
 
-  const handleSubmit = () => {
-    console.warn(details);
+  const handleNumberChange = (e) => {
+    const { name, value } = e.target;
+    setDetails((prevState) => ({
+      ...prevState,
+      [name]: Number(value),
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createOrder(details).then((order) => {
+      router.push(`/orders/${order.id}`);
+    });
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <div className="order-details-container">
+      <div>
         <div className="order-details">
           <h3>Order Details</h3>
 
-          <Form.Group as={Row} className="mb-3" controlId="dateControl">
-            <Form.Label column sm="2">Date:</Form.Label>
-            <Col sm="10">
-              <Form.Control column sm="2" plaintext readOnly type="email" value={details.date} />
-            </Col>
+          <Form.Group className="mb-3" controlId="dateControl">
+            <Form.Label sm="2">Date:</Form.Label>
+            <Form.Control sm="2" plaintext readOnly type="email" value={date} required />
           </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="customerControl">
-            <Form.Label column sm="2">Customer:</Form.Label>
-            <Col sm="10">
-              <Form.Control onChange={handleChange} column sm="2" name="customer" type="string" value={details.customer} />
-            </Col>
+          <Form.Group className="mb-3" controlId="customerControl">
+            <Form.Label sm="2">Customer:</Form.Label>
+            <Form.Control onChange={handleChange} sm="2" name="customer" type="string" value={details.customer} required />
           </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="placeholder">
-            <Form.Label column sm="2">Phone:</Form.Label>
-            <Col sm="10">
-              <Form.Control onChange={handleChange} column sm="2" name="phone" type="string" value={details.phone} />
-            </Col>
+          <Form.Group className="mb-3" controlId="placeholder">
+            <Form.Label sm="2">Phone:</Form.Label>
+            <Form.Control onChange={handleChange} sm="2" name="phone" type="string" value={details.phone} required />
           </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="phoneControl">
-            <Form.Label column sm="2">email:</Form.Label>
-            <Col sm="10">
-              <Form.Control onChange={handleChange} column sm="2" name="email" type="email" value={details.email} />
-            </Col>
+          <Form.Group className="mb-3" controlId="phoneControl">
+            <Form.Label sm="2">email:</Form.Label>
+            <Form.Control onChange={handleChange} sm="2" name="email" type="email" value={details.email} required />
           </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="orderTypeControl">
-            <Form.Label column sm="2">Order Channel:</Form.Label>
-            <Col sm="10">
-              <Form.Control column sm="2" plaintext readOnly type="string" value={details.type} />
-            </Col>
+          <Form.Group className="mb-3" controlId="orderTypeControl">
+            <Form.Label sm="2">Order Channel</Form.Label>
+            <Form.Select name="type" value={details.type} onChange={handleNumberChange} required>
+              <option value="">Choose Order Channel</option>
+              {orderTypes?.map((orderType) => (
+                <option key={orderType.id} value={orderType.id}>{orderType.label}</option>
+              ))}
+            </Form.Select>
           </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="paymentTypeControl">
-            <Form.Label column sm="2">Payment:</Form.Label>
-            <Col sm="10">
-              <Form.Control column sm="2" plaintext readOnly type="string" value={details.payment} />
-            </Col>
+          <Form.Group className="mb-3" controlId="paymentTypeControl">
+            <Form.Label sm="2">Payment</Form.Label>
+            <Form.Select name="payment" value={details.payment} onChange={handleNumberChange} required>
+              <option value="">Choose a Payment method.</option>
+              {paymentTypes?.map((payment) => (
+                <option key={payment.id} value={payment.id}>{payment.label}</option>
+              ))}
+            </Form.Select>
           </Form.Group>
         </div>
       </div>
