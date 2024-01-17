@@ -4,7 +4,12 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import MenuListItem from './MenuListItem';
 
-const MenuModal = ({ menu, orderId, setChange }) => {
+const MenuModal = ({
+  menu,
+  orderId,
+  setChange,
+  handleCalc,
+}) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -24,7 +29,7 @@ const MenuModal = ({ menu, orderId, setChange }) => {
 
           {menu.map((item) => (
             <section key={item.id}>
-              <MenuListItem item={item} handleClose={handleClose} orderId={orderId} setChange={setChange} />
+              <MenuListItem item={item} handleClose={handleClose} orderId={orderId} setChange={setChange} handleCalc={handleCalc} />
             </section>
           ))}
         </Modal.Body>
@@ -44,6 +49,7 @@ MenuModal.propTypes = {
   }).isRequired,
   orderId: PropTypes.number.isRequired,
   setChange: PropTypes.func.isRequired,
+  handleCalc: PropTypes.func.isRequired,
 };
 
 export default MenuModal;

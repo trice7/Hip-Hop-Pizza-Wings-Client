@@ -5,35 +5,40 @@ import Link from 'next/link';
 import MenuModal from '../menu/MenuModal';
 import { getMenu } from '../../api/menuData';
 import OrderListItem from '../menu/OrderListItem';
-
-const initialState = {
-  is_open: true,
-  subtotal: 0,
-  tip: 0,
-  tax: 0,
-  total: 0,
-  customer: '',
-  email: '',
-  phone: '',
-  date: new Date().toDateString(),
-  type: '',
-  payment: '',
-};
+import { updateOrder } from '../../api/orderData';
 
 const OpenOrder = ({ orderObj, setChange }) => {
-  // Logic that will determine whether certains fields can be edited or not
-  // const [active, setActive] = useState(true);
-  const [order, setOrder] = useState(initialState);
+  const [order, setOrder] = useState({});
   const [menu, setMenu] = useState([]);
-  const [orderItems, setOrderItems] = useState([]);
-  console.warn(orderItems);
+
+  const handleCalc = (obj) => {
+    const payload = { ...obj };
+    let calcSubTotal = 0;
+    payload.items?.forEach((item) => {
+      calcSubTotal += (item.item.cost * item.quantity);
+    });
+    const calcTax = (calcSubTotal / 100) * 8.75;
+    const roundedTax = Math.round(calcTax * 100) / 100;
+    const calcTotal = calcSubTotal + roundedTax + Number(obj.tip);
+
+    payload.server = obj.server.id;
+    payload.type = obj.type.id;
+    payload.payment = obj.payment.id;
+    payload.subtotal = calcSubTotal;
+    payload.tax = roundedTax;
+    payload.total = calcTotal;
+    payload.tip = Number(obj.tip);
+    payload.isOpen = obj.is_open;
+    // updateOrder(payload).then(() => {
+    //   setChange((prevState) => !prevState);
+    // });
+    updateOrder(payload).then();
+    console.warn(payload);
+  };
 
   useEffect(() => {
     getMenu().then(setMenu);
-
-    if (orderObj.id) {
-      setOrder(orderObj);
-    }
+    setOrder(orderObj);
   }, [orderObj]);
 
   // const handleChange = (e) => {
@@ -50,7 +55,7 @@ const OpenOrder = ({ orderObj, setChange }) => {
   // };
 
   const handleTest = () => {
-    console.warn(order);
+    handleCalc(order);
   };
 
   return (
@@ -59,11 +64,11 @@ const OpenOrder = ({ orderObj, setChange }) => {
       <div className="order-details-container">
         <div className="cart">
           <h3>Cart</h3>
-          <MenuModal menu={menu} setOrderItems={setOrderItems} orderId={order.id} setChange={setChange} />
+          <MenuModal menu={menu} orderId={order.id} setChange={setChange} handleCalc={handleCalc} order={order} />
           <div className="cart-list">
             {order.items?.map((item) => (
               <section key={item.id}>
-                <OrderListItem item={item} setChange={setChange} />
+                <OrderListItem item={item} setChange={setChange} handleCalc={handleCalc} />
               </section>
             ))}
           </div>
@@ -88,11 +93,14 @@ const OpenOrder = ({ orderObj, setChange }) => {
           </section>
 
           <section>
-            <p>Order Channel: {order.type.label}</p>
+            <p>Order Channel: {order.type?.label}</p>
           </section>
 
           <section>
-            <p>Payment: {order.payment.label}</p>
+            <p>Payment: {order.payment?.label}</p>
+          </section>
+          <section>
+            <p>Server: {order.server?.first_name}</p>
           </section>
           <Link passHref href={`/orders/edit/${order.id}`}>
             <Button variant="success">Edit Order Details</Button>
