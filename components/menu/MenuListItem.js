@@ -7,6 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { createOrderItem } from '../../api/orderItemsData';
+import { getSingleOrder } from '../../api/orderData';
 
 const initialState = {
   order: '',
@@ -19,6 +20,7 @@ const MenuListItem = ({
   handleClose,
   orderId,
   setChange,
+  handleCalc,
 }) => {
   const [lineItem, setLineItem] = useState(initialState);
 
@@ -43,9 +45,11 @@ const MenuListItem = ({
       // setChange is a useState that is initialized on orders/[id]. It's value is a boolean.
       // It's purpose is to detect a data change and refresh the DOM with the updated information.
       // This refreshes the cart on OpenOrder.js when an item is added.
-
-      setChange((prevState) => !prevState);
-      handleClose();
+      getSingleOrder(orderId).then((data) => {
+        handleCalc(data);
+        setChange((prevState) => !prevState);
+        handleClose();
+      });
     });
   };
 
@@ -88,6 +92,7 @@ MenuListItem.propTypes = {
   handleClose: PropTypes.func.isRequired,
   orderId: PropTypes.number.isRequired,
   setChange: PropTypes.func.isRequired,
+  handleCalc: PropTypes.func.isRequired,
 };
 
 export default MenuListItem;

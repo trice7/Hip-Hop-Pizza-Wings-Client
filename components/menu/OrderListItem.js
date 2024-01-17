@@ -1,14 +1,18 @@
 import { Button, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { deleteOrderItem } from '../../api/orderItemsData';
+import { getSingleOrder } from '../../api/orderData';
 
-const OrderListItem = ({ item, setChange }) => {
+const OrderListItem = ({ item, setChange, handleCalc }) => {
   const handleDelete = () => {
     deleteOrderItem(item.id).then(() => {
       // setChange is a useState that is initialized on orders/[id]. It's value is a boolean.
       // It's purpose is to detect a data change and refresh the DOM with the updated information.
       // This refreshes the cart on OpenOrder.js when an item is deleted.
-      setChange((prevState) => !prevState);
+      getSingleOrder(item.order.id).then((data) => {
+        handleCalc(data);
+        setChange((prevState) => !prevState);
+      });
     });
   };
 
@@ -27,10 +31,14 @@ OrderListItem.propTypes = {
       name: PropTypes.string,
       cost: PropTypes.number,
     }).isRequired,
+    order: PropTypes.shape({
+      id: PropTypes.number,
+    }).isRequired,
     quantity: PropTypes.number,
     id: PropTypes.number.isRequired,
   }).isRequired,
   setChange: PropTypes.func.isRequired,
+  handleCalc: PropTypes.func.isRequired,
 };
 
 export default OrderListItem;
