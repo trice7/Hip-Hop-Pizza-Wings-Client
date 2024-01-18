@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
@@ -11,6 +12,7 @@ import CustomTip from './CustomTip';
 const OpenOrder = ({ orderObj, setChange }) => {
   const [order, setOrder] = useState({});
   const [menu, setMenu] = useState([]);
+  const router = useRouter();
 
   const handleCalc = (obj) => {
     const payload = { ...obj };
@@ -55,8 +57,15 @@ const OpenOrder = ({ orderObj, setChange }) => {
   //   console.warn(orderItems);
   // };
 
-  const handleTest = () => {
-    handleCalc(order);
+  const closeOrder = () => {
+    const payload = { ...order };
+
+    payload.server = order.server.id;
+    payload.type = order.type.id;
+    payload.payment = order.payment.id;
+    payload.isOpen = false;
+
+    updateOrder(payload).then(router.push(`/orders/closed/${order.id}`));
   };
 
   const handleTip = (percentage) => {
@@ -157,7 +166,7 @@ const OpenOrder = ({ orderObj, setChange }) => {
         <section><p>Total: {order.total}</p></section>
       </div>
 
-      <Button onClick={handleTest}>Submit</Button>
+      <Button onClick={closeOrder}>Complete Order</Button>
     </div>
   );
 };
