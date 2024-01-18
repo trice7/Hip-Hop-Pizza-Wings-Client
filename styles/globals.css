@@ -38,3 +38,35 @@ body {
 /* .menu-modal-items {
   display: flex;
 } */
+
+.tip-container {
+  display: flex;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.receipt-center {
+  text-align: center;
+}
+
+.receipt-right {
+  text-align: right;
+}
+
+.receipt {
+  background-color: #BDADEA;
+  margin-top: 100px;
+  margin-right: 125px;
+  margin-left: 125px;
+  border-radius: 10px;
+}
+
+.receipt-items {
+  margin-top: 45px;
+  margin-right: 75px;
+  margin-left: 75px;
+  margin-bottom: 30px;
+}

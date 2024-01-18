@@ -16,7 +16,7 @@ const OrderCard = ({ orderObj, onUpdate }) => {
         <Card.Text>Date: {orderObj.date}</Card.Text>
         <Card.Text>Customer: {orderObj.customer}</Card.Text>
         <Card.Text>Total: {orderObj.total}</Card.Text>
-        <Link passHref href={`/orders/${orderObj.id}`}>
+        <Link passHref href={orderObj.is_open ? (`/orders/${orderObj.id}`) : (`/orders/closed/${orderObj.id}`)}>
           <Button>View Order</Button>
         </Link>
         {orderObj.is_open ? (<Button variant="danger" onClick={deleteThisOrder}>Cancel Order</Button>) : ''}

@@ -6,6 +6,7 @@ import MenuModal from '../menu/MenuModal';
 import { getMenu } from '../../api/menuData';
 import OrderListItem from '../menu/OrderListItem';
 import { updateOrder } from '../../api/orderData';
+import CustomTip from './CustomTip';
 
 const OpenOrder = ({ orderObj, setChange }) => {
   const [order, setOrder] = useState({});
@@ -58,6 +59,36 @@ const OpenOrder = ({ orderObj, setChange }) => {
     handleCalc(order);
   };
 
+  const handleTip = (percentage) => {
+    const payload = { ...order };
+    const calcTip = (order.subtotal / 100) * percentage;
+    const roundedTip = Math.round(calcTip * 100) / 100;
+    const calcTotal = Number(order.subtotal) + Number(order.tax) + Number(roundedTip);
+
+    payload.server = order.server.id;
+    payload.type = order.type.id;
+    payload.payment = order.payment.id;
+    payload.total = calcTotal;
+    payload.tip = Number(roundedTip);
+    payload.isOpen = order.is_open;
+
+    updateOrder(payload).then(() => {
+      setChange((prevState) => !prevState);
+    });
+  };
+
+  const handleTen = () => {
+    handleTip(10);
+  };
+
+  const handleFifteen = () => {
+    handleTip(15);
+  };
+
+  const handleTwenty = () => {
+    handleTip(20);
+  };
+
   return (
     <div>
       <h2>Order: {order.id}</h2>
@@ -103,7 +134,7 @@ const OpenOrder = ({ orderObj, setChange }) => {
             <p>Server: {order.server?.first_name}</p>
           </section>
           <Link passHref href={`/orders/edit/${order.id}`}>
-            <Button variant="success">Edit Order Details</Button>
+            <Button variant="success" value="15">Edit Order Details</Button>
           </Link>
         </div>
       </div>
@@ -112,7 +143,17 @@ const OpenOrder = ({ orderObj, setChange }) => {
         <h3>Calculations</h3>
         <section><p>Subtotal: {order.subtotal}</p></section>
         <section><p>Tax: {order.tax}</p></section>
-        <section><p>Tip: {order.tip}</p></section>
+
+        <section className="tip-container">
+          <p>Tip: {order.tip}</p>
+          <div>
+            <Button onClick={handleTen}>10%</Button>
+            <Button onClick={handleFifteen}>15%</Button>
+            <Button onClick={handleTwenty}>20%</Button>
+            <CustomTip order={order} handleCalc={handleCalc} setChange={setChange} />
+          </div>
+        </section>
+
         <section><p>Total: {order.total}</p></section>
       </div>
 
