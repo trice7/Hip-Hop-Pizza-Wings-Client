@@ -29,7 +29,10 @@ OrderCard.propTypes = {
   orderObj: PropTypes.shape({
     id: PropTypes.number,
     customer: PropTypes.string,
-    total: PropTypes.number,
+    total: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
     date: PropTypes.string,
     is_open: PropTypes.bool,
   }).isRequired,

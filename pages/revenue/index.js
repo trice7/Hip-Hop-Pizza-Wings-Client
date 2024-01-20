@@ -40,10 +40,10 @@ const RevenuePage = () => {
               <td>{order.total}</td>
             </tr>
           ))}
-          <Card className="revenue-total">
-            <Card.Body>Total Revenue for Period: {sum}</Card.Body>
-          </Card>
         </tbody>
+        <Card className="revenue-total">
+          <Card.Body>Total Revenue for Period: {Math.round(sum * 100) / 100}</Card.Body>
+        </Card>
       </Table>
     </div>
   );

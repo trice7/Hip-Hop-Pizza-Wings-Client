@@ -44,12 +44,16 @@ const MenuModal = ({
 };
 
 MenuModal.propTypes = {
-  menu: PropTypes.shape({
+  menu: PropTypes.arrayOf(PropTypes.shape({
     map: PropTypes.func,
-  }).isRequired,
-  orderId: PropTypes.number.isRequired,
+  })).isRequired,
+  orderId: PropTypes.number,
   setChange: PropTypes.func.isRequired,
   handleCalc: PropTypes.func.isRequired,
+};
+
+MenuModal.defaultProps = {
+  orderId: 0,
 };
 
 export default MenuModal;
