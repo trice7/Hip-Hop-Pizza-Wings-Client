@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
@@ -12,7 +11,6 @@ import CustomTip from './CustomTip';
 const OpenOrder = ({ orderObj, setChange }) => {
   const [order, setOrder] = useState({});
   const [menu, setMenu] = useState([]);
-  const router = useRouter();
 
   const handleCalc = (obj) => {
     const payload = { ...obj };
@@ -32,41 +30,13 @@ const OpenOrder = ({ orderObj, setChange }) => {
     payload.total = calcTotal;
     payload.tip = Number(obj.tip);
     payload.isOpen = obj.is_open;
-    // updateOrder(payload).then(() => {
-    //   setChange((prevState) => !prevState);
-    // });
     updateOrder(payload).then();
-    console.warn(payload);
   };
 
   useEffect(() => {
     getMenu().then(setMenu);
     setOrder(orderObj);
   }, [orderObj]);
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setOrder((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.warn(orderItems);
-  // };
-
-  const closeOrder = () => {
-    const payload = { ...order };
-
-    payload.server = order.server.id;
-    payload.type = order.type.id;
-    payload.payment = order.payment.id;
-    payload.isOpen = false;
-
-    updateOrder(payload).then(router.push(`/orders/closed/${order.id}`));
-  };
 
   const handleTip = (percentage) => {
     const payload = { ...order };
@@ -166,7 +136,9 @@ const OpenOrder = ({ orderObj, setChange }) => {
         <section><p>Total: {order.total}</p></section>
       </div>
 
-      <Button className="app-button" onClick={closeOrder}>Complete Order</Button>
+      <Link passHref href={`/orders/close/${order.id}`}>
+        <Button className="app-button">Complete Order</Button>
+      </Link>
     </div>
   );
 };
@@ -185,8 +157,3 @@ OpenOrder.defaultProps = {
 };
 
 export default OpenOrder;
-
-// {/* <Form.Group className="mb-3" controlId="placeholder">
-//   <Form.Label>PlaceHolder</Form.Label>
-//   <Form.Control type="email" />
-// </Form.Group> */}

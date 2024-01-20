@@ -29,7 +29,10 @@ OrderListItem.propTypes = {
   item: PropTypes.shape({
     item: PropTypes.shape({
       name: PropTypes.string,
-      cost: PropTypes.number,
+      cost: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+      ]),
     }).isRequired,
     order: PropTypes.shape({
       id: PropTypes.number,

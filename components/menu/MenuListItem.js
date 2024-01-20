@@ -85,14 +85,21 @@ const MenuListItem = ({
 MenuListItem.propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
-    cost: PropTypes.number,
+    cost: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
     quantity: PropTypes.number,
     id: PropTypes.number,
   }).isRequired,
   handleClose: PropTypes.func.isRequired,
-  orderId: PropTypes.number.isRequired,
+  orderId: PropTypes.number,
   setChange: PropTypes.func.isRequired,
   handleCalc: PropTypes.func.isRequired,
+};
+
+MenuListItem.defaultProps = {
+  orderId: 0,
 };
 
 export default MenuListItem;

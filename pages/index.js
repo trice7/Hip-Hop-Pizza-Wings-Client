@@ -6,7 +6,6 @@ import Logo from '../components/assets/OIG.jpg';
 
 function Home() {
   const { user } = useAuth();
-  console.warn(user);
   return (
     <div
       className="text-center d-flex flex-column justify-content-center align-content-center"

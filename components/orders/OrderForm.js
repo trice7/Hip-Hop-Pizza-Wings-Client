@@ -9,7 +9,6 @@ import { useAuth } from '../../utils/context/authContext';
 import {
   createOrder,
   getOrderTypes,
-  getPaymentTypes,
   updateOrder,
 } from '../../api/orderData';
 
@@ -23,13 +22,13 @@ const initialState = {
   email: '',
   phone: '',
   type: '',
-  payment: '',
+  payment: 1,
 };
 
 const OrderForm = ({ orderObj }) => {
   const [details, setDetails] = useState(initialState);
   const [orderTypes, setOrderTypes] = useState([]);
-  const [paymentTypes, setPaymentTypes] = useState([]);
+  // const [paymentTypes, setPaymentTypes] = useState([]);
 
   const date = new Date().toDateString();
   const router = useRouter();
@@ -37,7 +36,10 @@ const OrderForm = ({ orderObj }) => {
 
   useEffect(() => {
     if (orderObj) {
-      setDetails(orderObj);
+      const obj = { ...orderObj };
+      obj.type = orderObj.type?.id;
+      obj.payment = orderObj.payment?.id;
+      setDetails(obj);
     } else {
       setDetails((prevState) => ({
         ...prevState,
@@ -48,7 +50,7 @@ const OrderForm = ({ orderObj }) => {
 
   useEffect(() => {
     getOrderTypes().then(setOrderTypes);
-    getPaymentTypes().then(setPaymentTypes);
+    // getPaymentTypes().then(setPaymentTypes);
   }, []);
 
   const handleChange = (e) => {
@@ -91,40 +93,30 @@ const OrderForm = ({ orderObj }) => {
 
           <Form.Group className="mb-3" controlId="dateControl">
             <Form.Label sm="2">Date:</Form.Label>
-            <Form.Control className="form-text" sm="2" plaintext readOnly type="string" value={date} required />
+            <Form.Control className="form-text" sm="2" plaintext readOnly type="string" value={date || ''} required />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="customerControl">
             <Form.Label sm="2">Customer:</Form.Label>
-            <Form.Control onChange={handleChange} sm="2" name="customer" type="string" value={details.customer} required />
+            <Form.Control onChange={handleChange} sm="2" name="customer" type="string" value={details.customer || ''} required />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="placeholder">
             <Form.Label sm="2">Phone:</Form.Label>
-            <Form.Control onChange={handleChange} sm="2" name="phone" type="string" value={details.phone} required />
+            <Form.Control onChange={handleChange} sm="2" name="phone" type="string" value={details.phone || ''} required />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="phoneControl">
             <Form.Label sm="2">email:</Form.Label>
-            <Form.Control onChange={handleChange} sm="2" name="email" type="email" value={details.email} required />
+            <Form.Control onChange={handleChange} sm="2" name="email" type="email" value={details.email || ''} required />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="orderTypeControl">
             <Form.Label sm="2">Order Channel</Form.Label>
-            <Form.Select name="type" value={details.type} onChange={handleNumberChange} required>
-              <option value="">Choose Order Channel</option>
+            <Form.Select name="type" onChange={handleNumberChange} value={details.type || ''} required>
+              <option value="">Please Choose Order Type</option>
               {orderTypes?.map((orderType) => (
                 <option key={orderType.id} value={orderType.id}>{orderType.label}</option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="paymentTypeControl">
-            <Form.Label sm="2">Payment</Form.Label>
-            <Form.Select name="payment" value={details.payment} onChange={handleNumberChange} required>
-              <option value="">Choose Payment Method</option>
-              {paymentTypes?.map((payment) => (
-                <option key={payment.id} value={payment.id}>{payment.label}</option>
               ))}
             </Form.Select>
           </Form.Group>
@@ -138,6 +130,13 @@ const OrderForm = ({ orderObj }) => {
 OrderForm.propTypes = {
   orderObj: PropTypes.shape({
     id: PropTypes.number,
+    payment: PropTypes.shape({
+      id: PropTypes.number,
+    }),
+    type: PropTypes.shape({
+      id: PropTypes.number,
+      label: PropTypes.string,
+    }),
   }),
 };
 
