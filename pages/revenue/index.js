@@ -22,7 +22,7 @@ const RevenuePage = () => {
   return (
     <div>
       <h2>Revenue</h2>
-      <Table striped bordered hover size="sm">
+      <Table className="revenue-table" striped bordered hover size="sm">
         <thead>
           <tr>
             <th>Date</th>
@@ -31,7 +31,7 @@ const RevenuePage = () => {
             <th>Revenue</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="table-row">
           {orders.map((order) => (
             <tr>
               <td>{order.date}</td>

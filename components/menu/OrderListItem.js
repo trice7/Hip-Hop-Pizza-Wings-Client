@@ -17,9 +17,9 @@ const OrderListItem = ({ item, setChange, handleCalc }) => {
   };
 
   return (
-    <Card>
-      <Card.Body>
-        {item.item.name} -- {item.item.cost} -- Qty {item.quantity} <Button onClick={handleDelete}>Remove</Button>
+    <Card className="black-text">
+      <Card.Body className="black-text">
+        {item.item.name} -- {item.item.cost} -- Qty {item.quantity} <Button className="app-button" onClick={handleDelete}>Remove</Button>
       </Card.Body>
     </Card>
   );

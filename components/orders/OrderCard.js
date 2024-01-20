@@ -10,14 +10,14 @@ const OrderCard = ({ orderObj, onUpdate }) => {
     }
   };
   return (
-    <Card style={{ width: '18rem' }}>
+    <Card className="order-card" style={{ width: '18rem' }}>
       <Card.Body>
         <Card.Title>Order Number: {orderObj.id}</Card.Title>
         <Card.Text>Date: {orderObj.date}</Card.Text>
         <Card.Text>Customer: {orderObj.customer}</Card.Text>
         <Card.Text>Total: {orderObj.total}</Card.Text>
         <Link passHref href={orderObj.is_open ? (`/orders/${orderObj.id}`) : (`/orders/closed/${orderObj.id}`)}>
-          <Button>View Order</Button>
+          <Button className="app-button">View Order</Button>
         </Link>
         {orderObj.is_open ? (<Button variant="danger" onClick={deleteThisOrder}>Cancel Order</Button>) : ''}
       </Card.Body>

@@ -91,7 +91,7 @@ const OrderForm = ({ orderObj }) => {
 
           <Form.Group className="mb-3" controlId="dateControl">
             <Form.Label sm="2">Date:</Form.Label>
-            <Form.Control sm="2" plaintext readOnly type="string" value={date} required />
+            <Form.Control className="form-text" sm="2" plaintext readOnly type="string" value={date} required />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="customerControl">
@@ -130,7 +130,7 @@ const OrderForm = ({ orderObj }) => {
           </Form.Group>
         </div>
       </div>
-      <Button type="submit">Submit</Button>
+      <Button className="app-button" type="submit">Submit</Button>
     </Form>
   );
 };

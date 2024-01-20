@@ -21,7 +21,7 @@ const OrdersPage = () => {
 
   return (
     <article>
-      <h2>Pending Orders</h2>
+      <h2 className="order-page-titles">Pending Orders</h2>
       <div className="order-cards">
         {openOrders.map((order) => (
           <section key={order.id}>
@@ -30,7 +30,7 @@ const OrdersPage = () => {
         ))}
       </div>
 
-      <h2>Closed Orders</h2>
+      <h2 className="order-page-titles">Closed Orders</h2>
       <div className="order-cards">
         {closedOrders.map((order) => (
           <section key={order.id}>

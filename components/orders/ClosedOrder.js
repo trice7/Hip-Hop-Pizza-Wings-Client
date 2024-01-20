@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 const ClosedOrder = ({ order }) => {
   console.warn(order);
   return (
-    <div className="receipt">
+    <div className="receipt black-text">
       <section className="receipt-center">
         <h1>Hip Hop, Pizza, & Wings</h1>
         <p>(816) 555-1234</p>
@@ -32,7 +32,7 @@ const ClosedOrder = ({ order }) => {
         ))}
       </section>
 
-      <section className="receipt-right">
+      <section className="total-area receipt-right">
         <p>Subtotal: {order.subtotal}</p>
         <p>Tax: {order.tax}</p>
         <p>Tip: {order.tip}</p>

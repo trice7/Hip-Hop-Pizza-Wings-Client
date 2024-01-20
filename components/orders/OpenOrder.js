@@ -149,16 +149,16 @@ const OpenOrder = ({ orderObj, setChange }) => {
       </div>
 
       <div className="calculations">
-        <h3>Calculations</h3>
+        <h3>Checkout</h3>
         <section><p>Subtotal: {order.subtotal}</p></section>
         <section><p>Tax: {order.tax}</p></section>
 
         <section className="tip-container">
           <p>Tip: {order.tip}</p>
-          <div>
-            <Button onClick={handleTen}>10%</Button>
-            <Button onClick={handleFifteen}>15%</Button>
-            <Button onClick={handleTwenty}>20%</Button>
+          <div className="tip-boxes">
+            <Button className="app-button" onClick={handleTen}>10%</Button>
+            <Button className="app-button" onClick={handleFifteen}>15%</Button>
+            <Button className="app-button" onClick={handleTwenty}>20%</Button>
             <CustomTip order={order} handleCalc={handleCalc} setChange={setChange} />
           </div>
         </section>
@@ -166,7 +166,7 @@ const OpenOrder = ({ orderObj, setChange }) => {
         <section><p>Total: {order.total}</p></section>
       </div>
 
-      <Button onClick={closeOrder}>Complete Order</Button>
+      <Button className="app-button" onClick={closeOrder}>Complete Order</Button>
     </div>
   );
 };

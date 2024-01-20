@@ -17,18 +17,18 @@ const MenuModal = ({
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button className="app-button" onClick={handleShow}>
         Add Item
       </Button>
 
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Add Item</Modal.Title>
+          <Modal.Title className="black-text">Add Item</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
           {menu.map((item) => (
-            <section key={item.id}>
+            <section className="black-text" key={item.id}>
               <MenuListItem item={item} handleClose={handleClose} orderId={orderId} setChange={setChange} handleCalc={handleCalc} />
             </section>
           ))}
